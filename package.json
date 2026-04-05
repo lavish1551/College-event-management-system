@@ -1,0 +1,22 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "start-bg": "pm2 start server.js --name \"ideas-backend\"",
+    "stop-bg": "pm2 stop \"ideas-backend\"",
+    "status": "pm2 list"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "pm2": "^6.0.14",
+    "sqlite3": "^5.1.7"
+  }
+}

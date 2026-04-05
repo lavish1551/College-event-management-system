@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | IDEAS 4.0</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #030508;
+            --primary: #00f3ff;
+            --secondary: #bc13fe;
+            --text-main: #e0e6ed;
+        }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 50px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(10, 15, 25, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+        }
+        th {
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        tr:hover {
+            background: rgba(0, 243, 255, 0.05);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            text-decoration: none;
+            border: 1px solid var(--secondary);
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .btn-back:hover {
+            background: var(--secondary);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+        }
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-export {
+            background: #00f3ff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .btn-export:hover {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+            transform: scale(1.05);
+        }
+        
+        /* Stats Grid styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(10, 15, 25, 0.8);
+            border: 1px solid var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+        }
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+        .stat-label {
+            color: #8892a0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        /* Password Overlay Styles */
+        #authOverlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(3, 5, 8, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .auth-box {
+            background: rgba(10, 15, 25, 0.9);
+            border: 2px solid var(--primary);
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+        .auth-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 243, 255, 0.5);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .auth-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+        .auth-box button {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            width: 100%;
+        }
+        .auth-box button:hover {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+            transform: scale(1.02);
+        }
+        #errorMsg {
+            color: #ff0055;
+            margin-top: 10px;
+            display: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Protection Overlay -->
+    <div id="authOverlay">
+        <div class="auth-box">
+            <h2 style="color: var(--primary); font-family: 'Orbitron', sans-serif; margin-top: 0;">Admin Access Required</h2>
+            <p style="color: #8892a0; margin-bottom: 5px;">Please enter the dashboard password to view registrations.</p>
+            <input type="password" id="adminPassword" placeholder="Enter Password" onkeypress="handleEncrypt(event)">
+            <button onclick="checkPassword()">Unlock Dashboard</button>
+            <div id="errorMsg">Incorrect password. Access Denied.</div>
+            <a href="finalideasproject.html" style="display: block; margin-top: 20px; color: var(--secondary); text-decoration: none; font-size: 0.9rem;">← Go back to main site</a>
+        </div>
+    </div>
+
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header-controls">
+            <a href="finalideasproject.html" class="btn-back">← Back to Home</a>
+            <div>
+                <button class="btn-export" onclick="exportTableToCSV('Ideas_Registrations.csv')">Export CSV</button>
+                <button class="btn-export" style="background: var(--secondary); margin-left: 10px;" onclick="exportTableToPDF('Ideas_Registrations.pdf')">Export PDF</button>
+            </div>
+        </div>
+        <h1>Registration Dashboard</h1>
+        
+        <!-- Live Statistics widgets -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Total Teams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-ai">0</div>
+                <div class="stat-label">AI Track</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-web3">0</div>
+                <div class="stat-label">Web 3.0 Track</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-mobility">0</div>
+                <div class="stat-label">Mobility Track</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-robotics">0</div>
+                <div class="stat-label">Robotics Track</div>
+            </div>
+        </div>
+
+        <table id="regTable">
+            <thead>
+                <tr>
+                    <th>Team ID</th>
+                    <th>Team Leader</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Track</th>
+                    <th>Team Members</th>
+                    <th>Date & Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be dynamically loaded here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- jsPDF and AutoTable for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        const ADMIN_PASS = "ideas2026"; // Change your password here
+
+        function handleEncrypt(e) {
+            if (e.key === "Enter") {
+                checkPassword();
+            }
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('adminPassword').value;
+            if (input === ADMIN_PASS) {
+                // Correct Password - Hide overlay & fetch data
+                document.getElementById('authOverlay').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                fetchRegistrations();
+            } else {
+                // Wrong Password
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('adminPassword').value = '';
+                
+                // Shake animation for error
+                const box = document.querySelector('.auth-box');
+                box.style.transform = 'translate(5px, 0)';
+                setTimeout(() => box.style.transform = 'translate(-5px, 0)', 50);
+                setTimeout(() => box.style.transform = 'translate(5px, 0)', 100);
+                setTimeout(() => box.style.transform = 'translate(0, 0)', 150);
+            }
+        }
+
+        async function fetchRegistrations() {
+            try {
+                // Fetch from SQLite database via API
+                const response = await fetch('http://localhost:3000/registrations');
+                const rows = await response.json();
+                
+                const tbody = document.querySelector('#regTable tbody');
+                tbody.innerHTML = '';
+                
+                if (rows.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">No registrations yet.</td></tr>';
+                    return;
+                }
+
+                // Track analytics
+                let countAI = 0;
+                let countWeb3 = 0;
+                let countMobility = 0;
+                let countRobotics = 0;
+
+                // Loop through the data and create a table row for each registration
+                rows.forEach(reg => {
+                    // Update stats
+                    if(reg.track.includes("Artificial Intelligence")) countAI++;
+                    else if(reg.track.includes("Web 3.0")) countWeb3++;
+                    else if(reg.track.includes("Mobility")) countMobility++;
+                    else if(reg.track.includes("Robotics")) countRobotics++;
+
+                    const tr = document.createElement('tr');
+                    
+                    // SQLite DEFAULT CURRENT_TIMESTAMP creates UTC strings like "2026-03-08 14:20:00".
+                    // Appending "Z" forces JavaScript to parse it as UTC, so it displays correctly in the browser's local timezone.
+                    const dateObj = new Date(reg.timestamp + 'Z');
+                    
+                    const formattedDate = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString();
+
+                    // Parse Team Members JSON
+                    let membersHtml = "None";
+                    if (reg.membersJSON) {
+                        try {
+                            const parsedMembers = JSON.parse(reg.membersJSON);
+                            if (parsedMembers.length > 0) {
+                                membersHtml = "<ul style='margin: 0; padding-left: 20px;'>";
+                                parsedMembers.forEach(mem => {
+                                    membersHtml += `<li>${mem.name} (${mem.phone})</li>`;
+                                });
+                                membersHtml += "</ul>";
+                            }
+                        } catch (e) {
+                            console.error("Error parsing members:", e);
+                        }
+                    }
+
+                    tr.innerHTML = `
+                        <td><strong>${reg.teamId || 'N/A'}</strong></td>
+                        <td>${reg.name}</td>
+                        <td>${reg.email}</td>
+                        <td>${reg.phone}</td>
+                        <td>${reg.track}</td>
+                        <td>${membersHtml}</td>
+                        <td>${formattedDate}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Render Statistics
+                document.getElementById('stat-total').innerText = rows.length;
+                document.getElementById('stat-ai').innerText = countAI;
+                document.getElementById('stat-web3').innerText = countWeb3;
+                document.getElementById('stat-mobility').innerText = countMobility;
+                document.getElementById('stat-robotics').innerText = countRobotics;
+
+            } catch (err) {
+                console.error('Error fetching data:', err);
+                const tbody = document.querySelector('#regTable tbody');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: red;">Failed to load data. Make sure the server is running.</td></tr>';
+            }
+        }
+
+        // CSV Export Functionality
+        function exportTableToCSV(filename) {
+            const tempDiv = document.createElement('div');
+            let csv = [];
+            
+            // Get all rows
+            const rows = document.querySelectorAll("table tr");
+            
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll("td, th");
+                
+                for (let j = 0; j < cols.length; j++) 
+                    row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"'); // Escape quotes
+                
+                csv.push(row.join(","));
+            }
+
+            // Download CSV File
+            const csvFile = new Blob([csv.join("\n")], {type: "text/csv"});
+            const downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+
+        // PDF Export Functionality
+        function exportTableToPDF(filename) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape'); // Landscape to fit all columns better
+            
+            // Add Title
+            doc.setFontSize(16);
+            doc.text("IDEAS 4.0 - Registration Dashboard", 14, 15);
+            
+            // Generate AutoTable from our HTML table
+            doc.autoTable({
+                html: '#regTable',
+                startY: 25,
+                styles: { fontSize: 10, cellPadding: 3 },
+                headStyles: { fillColor: [0, 243, 255], textColor: [0, 0, 0], fontStyle: 'bold' },
+                alternateRowStyles: { fillColor: [240, 240, 240] }
+            });
+
+            // Save the File
+            doc.save(filename);
+        }
+    </script>
+</body>
+</html>
